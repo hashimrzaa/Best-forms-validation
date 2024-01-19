@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Validation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .field-icon {
+            float: right;
+            margin-left: -25px;
+            margin-top: -25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 16px;
+        }
+
+
+        .inp {
+            display: flex;
+            position: relative;
+        }
+
+        .inp img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .inp span {
+            position: absolute;
+            right: 10px;
+            top: 7px;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
+
+        <label for="password">Password:</label>
+        <div class="inp">
+            <input type="password" id="password" name="password">
+            <span><img class="hide" src="hide.png" alt=""></span>
+
+        </div>
+
+        <div class="error" id="nameError"></div>
+        <div class="error" id="emailError"></div>
+        <div class="error" id="passwordError"></div>
+
+        <button type="button">Submit</button>
+    </form>
+
+    <script>
+
+        const btn = document.querySelector('button')
+        let show = document.querySelector('.inp span')
+        let erornam = document.getElementById('nameError')
+        let eroremail = document.getElementById('emailError')
+        let erorpass = document.getElementById('passwordError')
+        let name = document.getElementById("name")
+        let email = document.getElementById("email")
+        let password = document.getElementById("password")
+        let img = document.querySelector('img')
+        if (window.location.reload) {
+            name.focus()
+        }
+        function Validation() {
+
+            if (name.value === "") {
+                erornam.innerText = "Name is required";
+                name.focus()
+                return
+            }
+            if (name.value !== "") {
+                erornam.innerText = ""
+            }
+            if (email.value === "") {
+                eroremail.innerText = "Email is required";
+                email.focus()
+                return
+            }
+            if (email.value !== "") {
+                eroremail.innerText = "";
+            }
+
+            if (email.value.includes('@') === false) {
+                eroremail.innerText = "@ is required in email";
+                email.focus()
+                return
+            }
+            if (email.value.includes('@') !== false) {
+                eroremail.innerText = "";
+
+            }
+            if (email.value.includes('.') === false) {
+                eroremail.innerText = ". is required in email";
+                email.focus()
+                return
+            }
+            if (email.value.includes('.') !== false) {
+                eroremail.innerText = "";
+
+            }
+            if (email.value.indexOf(' ') !== -1) {
+                eroremail.innerText = "space is not allowed";
+                email.focus()
+                return
+            }
+            if (email.value.indexOf(' ') === -1) {
+                eroremail.innerText = "";
+            }
+            if (password.value === "") {
+                erorpass.innerText = "Password is required";
+                password.focus()
+                return
+            }
+            if (password.value !== "") {
+                erorpass.innerText = "";
+
+            }
+
+            if (password.value.length < 6) {
+                erorpass.innerText = "6 digits password required";
+                password.focus()
+                return
+            }
+            if (password.value.length > 6) {
+                erorpass.innerText = "";
+            }
+
+
+            if (erornam.value === undefined && eroremail.value === undefined && erorpass.value === undefined) {
+                const div = document.createElement("div")
+                div.innerText = 'success'
+                div.classList.add('create')
+                const a = document.body.appendChild(div)
+                document.querySelector('form').style.display = "none"
+            }
+        }
+        btn.addEventListener('click', Validation)
+
+
+        document.addEventListener('keydown', function (event) {
+            const key = event.key
+            if (key === "Enter") {
+                Validation()
+            }
+        })
+
+        password.addEventListener('input', function () {
+            if (password.value.length === 0) {
+                img.classList.add('hide')
+            } else {
+                img.classList.remove('hide')
+            }
+        })
+
+        show.addEventListener('click', function () {
+            if (password.type === "password") {
+                img.src = "show.png"
+                password.type = "text"
+            } else { 
+                password.type = "password"
+                img.src = "hide.png"
+            }
+            show.addEventListener('mouseleave', function () {
+                password.type = "password"
+                img.src = "hide.png"
+            })
+        })
+
+        document.addEventListener('keydown', function (event) {
+            const key = event.key
+            if (key === 'Shift') {
+                password.type = "text"
+                img.src = "show.png"
+            }
+            document.addEventListener('keyup', function (event) {
+                const key = event.key
+                if (key === 'Shift') {
+                    password.type = "password"
+                    img.src = "hide.png"
+                }
+            })
+        })
+    </script>
+
+</body>
+
+</html>
